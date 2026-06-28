@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Tema 6 (Específico) — Decreto 42/2019 Condiciones de Trabajo GVA | Opositar en Valencia</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --naranja: #d97706; --naranja-claro: #fef3c7; --naranja-borde: #f59e0b;
+    --azul-oscuro: #1e293b; --texto: #374151; --texto-suave: #6b7280;
+    --borde: #e5e7eb; --fondo: #fafaf9; --blanco: #ffffff;
+    --verde: #166534; --verde-bg: #f0fdf4; --verde-borde: #86efac;
+    --rojo: #991b1b; --rojo-bg: #fef2f2; --rojo-borde: #fca5a5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--fondo); color: var(--texto); min-height: 100vh; font-size: 16px; line-height: 1.6; }
+  header { background: var(--blanco); border-bottom: 1px solid var(--borde); }
+  .header-top { max-width: 860px; margin: 0 auto; padding: 1.4rem 1.5rem 1rem; display: flex; align-items: flex-start; gap: 1.2rem; }
+  .header-logo { width: 48px; height: 48px; border-radius: 8px; object-fit: contain; flex-shrink: 0; }
+  .header-textos { flex: 1; }
+  .header-site { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--naranja); font-weight: 600; margin-bottom: 3px; }
+  .header-titulo { font-family: 'Lora', serif; font-size: clamp(1.1rem, 3vw, 1.6rem); font-weight: 700; color: var(--azul-oscuro); line-height: 1.2; }
+  .header-sub { font-size: 0.88rem; color: var(--texto-suave); margin-top: 4px; }
+  .header-meta { background: var(--naranja-claro); border-top: 1px solid #fde68a; padding: 0.55rem 1.5rem; }
+  .header-meta-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; font-size: 0.83rem; color: #92400e; font-weight: 500; }
+  .barra-wrap { position: sticky; top: 0; z-index: 100; background: var(--blanco); border-bottom: 1px solid var(--borde); padding: 0.6rem 1.5rem; box-shadow: 0 1px 6px rgba(0,0,0,0.05); }
+  .barra-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 1rem; }
+  .barra-track { flex: 1; height: 6px; background: #f3f4f6; border-radius: 99px; overflow: hidden; }
+  .barra-fill { height: 100%; background: var(--naranja); border-radius: 99px; transition: width 0.35s ease; width: 0%; }
+  .barra-num { font-size: 13px; font-weight: 600; color: var(--azul-oscuro); white-space: nowrap; min-width: 52px; }
+  .barra-score { font-size: 13px; color: var(--texto-suave); white-space: nowrap; }
+  .barra-score .ok { color: var(--verde); font-weight: 600; }
+  .barra-score .ko { color: var(--rojo); font-weight: 600; }
+  main { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+  .card { background: var(--blanco); border: 1px solid var(--borde); border-radius: 10px; padding: 1.5rem 1.6rem; margin-bottom: 1.4rem; transition: box-shadow 0.2s; }
+  .card:hover { box-shadow: 0 3px 14px rgba(0,0,0,0.06); }
+  .card-num { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--naranja); margin-bottom: 0.5rem; }
+  .card-pregunta { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; line-height: 1.55; color: var(--azul-oscuro); margin-bottom: 1.1rem; }
+  .opciones { display: flex; flex-direction: column; gap: 0.45rem; }
+  .opcion { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.7rem 1rem; border: 1.5px solid var(--borde); border-radius: 7px; cursor: pointer; background: var(--blanco); text-align: left; font-family: 'Source Sans 3', sans-serif; font-size: 0.93rem; color: var(--texto); line-height: 1.5; transition: border-color 0.15s, background 0.15s; width: 100%; }
+  .opcion:hover:not(:disabled) { border-color: var(--naranja-borde); background: var(--naranja-claro); }
+  .opcion .letra { font-weight: 700; color: var(--naranja); min-width: 18px; font-size: 0.85rem; margin-top: 2px; flex-shrink: 0; }
+  .opcion.correcta { border-color: var(--verde-borde); background: var(--verde-bg); color: var(--verde); }
+  .opcion.correcta .letra { color: #15803d; }
+  .opcion.incorrecta { border-color: var(--rojo-borde); background: var(--rojo-bg); color: var(--rojo); }
+  .opcion.incorrecta .letra { color: var(--rojo); }
+  .opcion:disabled { cursor: default; }
+  .explicacion { display: none; margin-top: 1rem; padding: 0.9rem 1rem 0.9rem 1.1rem; background: #fffbeb; border-left: 3px solid var(--naranja); border-radius: 0 6px 6px 0; font-size: 0.875rem; line-height: 1.65; color: var(--texto); }
+  .explicacion.visible { display: block; animation: fadeIn 0.22s ease; }
+  .explicacion strong { color: var(--azul-oscuro); }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+  .resultado { display: none; background: var(--blanco); border: 1px solid var(--borde); border-radius: 12px; padding: 2.5rem 2rem 2rem; margin: 1.5rem 0 2rem; text-align: center; }
+  .resultado.visible { display: block; animation: fadeIn 0.3s ease; }
+  .resultado-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--naranja); font-weight: 600; margin-bottom: 0.5rem; }
+  .resultado h2 { font-family: 'Lora', serif; font-size: 1.75rem; font-weight: 700; color: var(--azul-oscuro); margin-bottom: 0.3rem; }
+  .resultado-nota { font-size: 3.2rem; font-weight: 700; color: var(--azul-oscuro); line-height: 1; margin: 1rem 0 0.3rem; font-family: 'Lora', serif; }
+  .resultado-nota span { color: var(--naranja); }
+  .calif-badge { display: inline-block; padding: 5px 16px; border-radius: 99px; font-size: 0.9rem; font-weight: 600; margin: 0.6rem 0 1.5rem; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 0 0 1.5rem; }
+  .stat { background: var(--fondo); border: 1px solid var(--borde); border-radius: 8px; padding: 0.9rem 0.5rem; }
+  .stat-num { font-size: 1.9rem; font-weight: 700; font-family: 'Lora', serif; }
+  .stat-lab { font-size: 0.78rem; color: var(--texto-suave); margin-top: 2px; }
+  .resultado-hint { font-size: 0.85rem; color: var(--texto-suave); margin-bottom: 1.2rem; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 0.7rem 1.6rem; border-radius: 7px; font-family: 'Source Sans 3', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.18s; }
+  .btn-naranja { background: var(--naranja); color: white; }
+  .btn-naranja:hover { background: #b45309; transform: translateY(-1px); }
+  @media (max-width: 580px) { main { padding: 1.2rem 1rem 4rem; } .card { padding: 1.1rem; } .stats { grid-template-columns: 1fr 1fr; } .header-top { padding: 1rem; gap: 0.8rem; } .header-meta { padding: 0.5rem 1rem; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <img class="header-logo"
+      src="https://opositorgva.wordpress.com/wp-content/uploads/2024/04/cropped-opositar-en-valencia-logo-sin-fondo.png"
+      alt="Opositar en Valencia" onerror="this.style.display='none'">
+    <div class="header-textos">
+      <div class="header-site">Opositar en Valencia · GVA · Temario específico</div>
+      <div class="header-titulo">Tema 6 — Decreto 42/2019, de condiciones de trabajo del personal funcionario de la Generalitat</div>
+      <div class="header-sub">Jornada, horario, reducciones, permisos, licencias y vacaciones · Auxiliar Administrativo C2</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="header-meta-inner">
+      <span id="totalLabel">📋 Cargando...</span>
+      <span>🎯 Nivel medio-alto</span>
+      <span>🔀 Orden aleatorio en cada intento</span>
+      <span>✅ Explicación en cada respuesta</span>
+    </div>
+  </div>
+</header>
+
+<div class="barra-wrap">
+  <div class="barra-inner">
+    <div class="barra-track"><div class="barra-fill" id="barraFill"></div></div>
+    <span class="barra-num" id="barraNum">0 / ?</span>
+    <span class="barra-score"><span class="ok" id="scoreOk">✓ 0</span> &nbsp;<span class="ko" id="scoreKo">✗ 0</span></span>
+  </div>
+</div>
+
+<main id="mainContent"></main>
+
+<script>
+const BANCO = [
+
+  /* ══ CAPÍTULO I — DISPOSICIONES GENERALES ══ */
+  {
+    p: "¿Cuál es el objeto del Decreto 42/2019, de 22 de marzo, del Consell, según su artículo 1?",
+    ops: [
+      "Regular el régimen disciplinario del personal funcionario de la Administración de la Generalitat",
+      "Regular las condiciones de trabajo del personal funcionario de la Administración de la Generalitat, entendida en los términos del artículo 4 de la LOGFPV",
+      "Establecer las retribuciones básicas y complementarias del personal al servicio de la Generalitat",
+      "Ordenar el acceso y la promoción interna del personal funcionario de carrera de la Generalitat"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 1 del Decreto 42/2019 establece que su objeto es «regular las condiciones de trabajo del personal funcionario de la Administración de la Generalitat entendida en los términos establecidos en el artículo 4 de la LOGFPV». Este es el decreto de referencia para conocer jornada, horario, permisos, licencias y vacaciones del personal funcionario de la GVA."
+  },
+  {
+    p: "Según el artículo 2.a) del Decreto 42/2019, ¿cómo se define la «pareja de hecho» a los efectos del decreto?",
+    ops: [
+      "La persona que conviva con la de referencia de forma estable durante al menos dos años, aunque no esté inscrita en ningún registro",
+      "La persona que respecto a la de referencia mantiene una relación que puede acreditar a través de la inscripción en un registro público oficial de uniones de hecho",
+      "El cónyuge de hecho que convive en el mismo domicilio, acreditado mediante certificado de empadronamiento conjunto",
+      "Cualquier persona con la que se mantenga una relación de afectividad análoga al matrimonio, independientemente de su inscripción registral"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 2.a) del Decreto 42/2019 define la pareja de hecho como «persona que respecto de la persona de referencia mantiene una relación que puede acreditar a través de la inscripción en un registro público oficial de uniones de hecho». El elemento clave es la acreditación mediante inscripción en un registro público oficial."
+  },
+  {
+    p: "A efectos del Decreto 42/2019, ¿qué se entiende por «enfermedad grave» según el artículo 2.h)?",
+    ops: [
+      "Exclusivamente la hospitalización de duración superior a tres días",
+      "Cualquier enfermedad que impida la prestación de servicios, acreditada con parte de baja",
+      "La hospitalización, la intervención quirúrgica sin hospitalización que precise reposo domiciliario, o aquella enfermedad cuya gravedad o necesidad de atención continuada sea acreditada por el facultativo responsable",
+      "Solo las enfermedades oncológicas o crónicas debidamente diagnosticadas por la Unidad de Valoración Médica de Incapacidades"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 2.h) del Decreto 42/2019 define enfermedad grave como aquella que «incluye la hospitalización, la intervención quirúrgica sin hospitalización que precise reposo domiciliario o aquella enfermedad cuya gravedad o necesidad de atención continuada sea acreditada por el facultativo responsable del paciente». Son tres supuestos alternativos, no todos requieren hospitalización."
+  },
+  {
+    p: "¿Cómo debe acreditarse la situación de convivencia, con carácter general, según el artículo 3.a) del Decreto 42/2019?",
+    ops: [
+      "Mediante declaración jurada ante notario o funcionario habilitado",
+      "Mediante certificado de empadronamiento expedido por el ayuntamiento de residencia",
+      "Mediante informe del servicio social correspondiente al municipio de residencia",
+      "Mediante cualquier documento privado que acredite la residencia habitual compartida"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 3.a) del Decreto 42/2019 establece que, con carácter general, «la situación de convivencia ha de ser acreditada mediante certificado de empadronamiento expedido por el ayuntamiento de residencia». Este es el medio de acreditación específicamente previsto, sin perjuicio de la posibilidad de acreditar por cualquier otro medio admitido en Derecho."
+  },
+
+  /* ══ CAPÍTULO II — JORNADA DE TRABAJO ══ */
+  {
+    p: "¿Cuál es la jornada laboral general del personal funcionario de la Generalitat que ocupa puestos con componente de desempeño inferior al que determina la dedicación especial, según el artículo 4.1 del Decreto 42/2019?",
+    ops: [
+      "Cuarenta horas semanales",
+      "Treinta y ocho horas semanales",
+      "Treinta y cinco horas semanales",
+      "Treinta y siete horas y treinta minutos semanales"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 4.1 del Decreto 42/2019 establece que «la jornada laboral general del personal que desempeñe puestos de trabajo con componente de desempeño del complemento de puesto de trabajo inferior a los establecidos en el apartado siguiente, será de treinta y cinco horas semanales». Solo los puestos de especial dedicación tienen 37 horas y 30 minutos."
+  },
+  {
+    p: "Según el artículo 4.2 del Decreto 42/2019, ¿qué componente de desempeño del complemento de puesto determina la jornada de especial dedicación (37h 30 min) para el grupo C2?",
+    ops: [
+      "E019",
+      "E013",
+      "E015",
+      "E021"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 4.2 del Decreto 42/2019 establece la tabla de componentes de desempeño que determinan los puestos de especial dedicación. Para el grupo C2, el umbral es el componente E015. A modo comparativo: A1 = E038, A2 = E023, B = E021, C1 = E019, C2 = E015, APF = E013."
+  },
+  {
+    p: "Cuando las necesidades urgentes del servicio exigen una jornada superior a la ordinaria, ¿cómo se compensa el exceso horario según el artículo 4.3 del Decreto 42/2019?",
+    ops: [
+      "A razón de una hora y media por cada hora de exceso, o dos horas si el requerimiento es en día inhábil",
+      "Mediante compensación económica en la nómina del mes siguiente",
+      "A razón de dos horas por cada hora de exceso, o dos horas y media si el requerimiento es en día inhábil, dentro de los tres meses naturales siguientes",
+      "A razón de dos horas por cada hora de exceso, únicamente en días laborables, sin posibilidad de ampliación del plazo"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 4.3 del Decreto 42/2019 establece que «el exceso de horario será compensado a razón de dos horas por cada hora de exceso, o dos y media si el requerimiento se realiza en un día inhábil». La compensación puede disfrutarse dentro de los tres meses naturales siguientes, acumularse en jornadas completas, y si las necesidades del servicio lo impiden, el plazo puede ampliarse excepcionalmente tres meses más."
+  },
+  {
+    p: "El personal con jornada de 37 horas y 30 minutos y componente de desempeño igual o superior al E045, ¿tiene derecho a compensación horaria o gratificaciones cuando se le requiere para jornada adicional?",
+    ops: [
+      "Sí, tiene derecho a la misma compensación que el resto del personal: dos horas por cada hora de exceso",
+      "Sí, pero solo mediante gratificación económica, no compensación en tiempo",
+      "No procede compensación horaria ni gratificación alguna por servicios extraordinarios, salvo lo dispuesto en el Decreto 24/1997",
+      "Sí, pero la compensación se reduce a hora y media por hora de exceso, al tratarse de personal directivo"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 5.2 del Decreto 42/2019 establece que el personal que ocupe puestos con componente de desempeño igual o superior al E045 podrá ser requerido para jornada superior, pero «no procederá la compensación horaria prevista en el artículo 4.3, ni compensación alguna en concepto de gratificaciones por razón del servicio y por servicios extraordinarios salvo lo dispuesto en el Decreto 24/1997, de 11 de febrero, del Consell». Esta es la excepción para puestos de mayor responsabilidad."
+  },
+  {
+    p: "¿Cuántos días hábiles de vacaciones se descuentan al calcular el cómputo anual de la jornada, según el artículo 6.1.a) del Decreto 42/2019?",
+    ops: [
+      "20 días hábiles",
+      "22 días hábiles",
+      "25 días hábiles",
+      "30 días naturales"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 6.1.a) del Decreto 42/2019 establece que para el cómputo anual de la jornada se descuentan «22 días hábiles de vacaciones», junto con 2 días de fiestas locales, 12 días de fiestas de ámbito superior y 6 días por permiso de asuntos propios más los días compensatorios. Los 22 días hábiles es la duración base de las vacaciones anuales."
+  },
+  {
+    p: "Según el artículo 6.8 del Decreto 42/2019, ¿qué se descuenta del cómputo anual en relación con la jornada reducida prevista en el artículo 13.8?",
+    ops: [
+      "Tres horas semanales durante los meses de verano",
+      "Dos horas y media semanales con base en la previsión del apartado 8 del artículo 13",
+      "Una hora diaria durante el período de reducción estival",
+      "Cinco horas semanales durante los períodos de vacaciones escolares"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 6.2.b) del Decreto 42/2019 establece que al cómputo anual se descontarán además «dos horas y media semanales con base en la previsión contenida en el apartado 8 del artículo 13». Esto se refiere a la reducción de jornada aplicable del 15 de mayo al 15 de octubre y en los períodos de vacaciones escolares de Navidad y Pascua."
+  },
+  {
+    p: "¿Hasta qué fracción de la jornada puede reducirse esta con disminución proporcional de retribuciones por razones de guarda legal, según el artículo 7.1 del Decreto 42/2019?",
+    ops: [
+      "Hasta un tercio de la jornada",
+      "Hasta un cuarto de la jornada",
+      "Hasta la mitad de la jornada",
+      "Hasta dos tercios de la jornada"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 7.1 del Decreto 42/2019 establece que «se tendrá derecho a la reducción de jornada hasta la mitad de la misma, con disminución proporcional de retribuciones» por las causas tasadas: guarda legal de menores de 12 años, personas mayores con especial dedicación, familiar con discapacidad igual o superior al 33 %, o cónyuge/familiar hasta segundo grado que requiera especial dedicación."
+  },
+  {
+    p: "Según el artículo 7.1.a) del Decreto 42/2019, ¿hasta qué edad del menor se tiene derecho a reducción de jornada por guarda legal con disminución de retribuciones?",
+    ops: [
+      "Menores de 6 años",
+      "Menores de 10 años",
+      "Menores de 12 años o de esa edad",
+      "Menores de 14 años o de esa edad"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 7.1.a) del Decreto 42/2019 establece la reducción de jornada «cuando el personal tenga a su cargo algún niño o niña de 12 años o menor». Es importante no confundir este límite con los 14 años que se utilizan en otras previsiones (como la flexibilidad de permanencia del artículo 14 o la preferencia vacacional). El límite para la reducción con merma retributiva por guarda legal es de 12 años."
+  },
+  {
+    p: "El artículo 7.3 del Decreto 42/2019 permite solicitar una jornada reducida continua e ininterrumpida de 9 a 14 horas. ¿Qué porcentaje de retribuciones se percibe en ese caso?",
+    ops: [
+      "El 50 % del total de retribuciones",
+      "El 60 % del total de retribuciones",
+      "El 75 % del total de retribuciones",
+      "El 80 % del total de retribuciones"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 7.3 del Decreto 42/2019 establece que el personal que ocupe puestos con jornada de 35 horas «podrá solicitar una jornada reducida, continua e ininterrumpida de las 9 a las 14 horas, o las equivalentes si el puesto está sujeto a turnos, percibiendo un 75 % del total de sus retribuciones». Esta modalidad requiere acreditar circunstancias personales distintas de las del apartado 1 y su denegación debe ser motivada."
+  },
+  {
+    p: "Según el artículo 7.5 del Decreto 42/2019, cuando la enfermedad del cónyuge o pareja de hecho o familiar de primer grado sea «muy grave», ¿qué reducción de jornada retribuida puede solicitarse y por cuánto tiempo máximo?",
+    ops: [
+      "Reducción de hasta un tercio de la jornada, con carácter retribuido, por plazo máximo de tres meses",
+      "Reducción de hasta el 50 % de la jornada, con carácter retribuido, por plazo máximo de un mes",
+      "Reducción de hasta el 50 % de la jornada, sin retribución, por plazo indefinido mientras dure la enfermedad",
+      "Reducción de hasta dos tercios de la jornada, con carácter retribuido, por plazo máximo de dos semanas"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 7.5 del Decreto 42/2019 establece que «cuando por razones de enfermedad muy grave sea preciso atender el cuidado del cónyuge, pareja de hecho o de un familiar de primer grado, el personal funcionario tendrá derecho a solicitar una reducción de hasta el 50 % de la jornada laboral, con carácter retribuido y por el plazo máximo de un mes». La reducción quedará sin efecto antes si se produce alta o fallecimiento del familiar."
+  },
+  {
+    p: "Según el artículo 7.6 del Decreto 42/2019, ¿a qué reducción de jornada tienen derecho las empleadas víctimas de violencia sobre la mujer sin reducción de haberes?",
+    ops: [
+      "A la reducción de un cuarto de la jornada sin reducción de haberes",
+      "A la reducción de un tercio de la jornada sin reducción de haberes, o bien del 50 % de la jornada con reducción correspondiente a la diferencia entre el tercio y la mitad",
+      "A la reducción de hasta la mitad de la jornada sin reducción de haberes en todos los casos",
+      "A la reducción del 25 % de la jornada sin reducción de haberes, ampliable al 50 % con autorización del órgano de personal"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 7.6 del Decreto 42/2019 establece que «las empleadas víctimas de violencia sobre la mujer, para hacer efectivo su derecho a la asistencia social integral, tendrán derecho a la reducción de un tercio de la jornada sin reducción de haberes, o bien de un 50 % de la jornada, con una reducción de haberes correspondiente a la diferencia entre el tercio y la mitad de aquella». Idéntico régimen se aplica a las víctimas de violencia terrorista (art. 7.7)."
+  },
+  {
+    p: "Cuando el personal se reincorpora tras un tratamiento oncológico, ¿qué reducción de jornada sin reducción de haberes puede solicitarse y durante cuánto tiempo, según el artículo 7.8 del Decreto 42/2019?",
+    ops: [
+      "Reducción de hasta el 50 % sin reducción de haberes, durante un mes prorrogable a dos",
+      "Reducción de hasta el 25 % sin reducción de haberes, durante un mes desde el alta médica, prorrogable a dos meses si persisten las circunstancias",
+      "Reducción de hasta un tercio sin reducción de haberes, durante tres meses desde el alta",
+      "Reducción de hasta el 25 % con reducción proporcional de haberes, durante seis meses"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 7.8 del Decreto 42/2019 establece que «cuando el personal se reincorpore al servicio efectivo tras la finalización de un tratamiento oncológico podrá solicitar, durante el plazo máximo de un mes desde la fecha del alta médica, una reducción de hasta el 25 % de la jornada sin reducción de haberes». Este plazo podrá ampliarse un mes más si persisten las circunstancias derivadas del tratamiento. Los órganos competentes la concederán cuando favorezca la recuperación funcional."
+  },
+  {
+    p: "El artículo 8.1 del Decreto 42/2019 establece que las reducciones de jornada son incompatibles entre sí. ¿Qué reducciones son compatibles con las restantes por excepción expresa?",
+    ops: [
+      "Las del artículo 7.1.a), 7.6 y 7.8",
+      "Las del artículo 7.1.c), 7.6 y 7.7",
+      "Las del artículo 7.3, 7.5 y 7.6",
+      "Las del artículo 7.2, 7.4 y 7.8"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 8.1 del Decreto 42/2019 establece que las reducciones de jornada «son incompatibles entre sí, a excepción de las de los apartados 7.1.c), 7.6 y 7.7, que serán compatibles con las restantes». Estas tres son: la reducción por enfermedad o discapacidad del propio funcionario (7.1.c), la reducción por violencia sobre la mujer (7.6) y la reducción por víctimas de violencia terrorista (7.7)."
+  },
+
+  /* ══ HORARIO DE TRABAJO ══ */
+  {
+    p: "Según el artículo 9.2 del Decreto 42/2019, ¿cuál es la «parte de tiempo fijo o estable» del horario flexible para el personal de servicios burocráticos y cuándo se aplica?",
+    ops: [
+      "Cuatro horas diarias, entre las 08.00 y las 12.00 horas, de lunes a viernes",
+      "Cinco horas diarias, entre las 09.00 y las 14.00 horas, de lunes a viernes, con carácter de permanencia obligatoria",
+      "Seis horas diarias, entre las 08.00 y las 14.00 horas, de lunes a viernes",
+      "Cinco horas diarias entre las 08.30 y las 13.30 horas, de lunes a jueves"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 9.2 del Decreto 42/2019 establece que «la parte principal, llamada de tiempo fijo o estable, será de cinco horas diarias, y será de permanencia obligatoria para todo el personal entre las 09.00 y las 14.00 horas, de lunes a viernes». Este es el núcleo del horario de servicios burocráticos, al que hay que sumar la parte variable."
+  },
+  {
+    p: "Según el artículo 9.4 del Decreto 42/2019, ¿en qué franja horaria puede realizarse la parte variable del horario los viernes?",
+    ops: [
+      "Desde las 07.30 a las 09.00 horas y desde las 14.00 a las 19.00 horas",
+      "Desde las 07.30 a las 09.00 horas y desde las 14.00 a las 16.00 horas",
+      "Desde las 08.00 a las 09.00 horas y desde las 14.00 a las 17.00 horas",
+      "Desde las 07.00 a las 09.00 horas, sin posibilidad de tarde"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 9.4 del Decreto 42/2019 diferencia entre lunes a jueves y viernes. Los viernes, la parte variable puede realizarse «desde las 07.30 a las 09.00 horas, y desde las 14.00 a las 16.00 horas». En cambio, de lunes a jueves la franja de tarde se extiende hasta las 19.00 horas. Esta es una diferencia fundamental para el examen."
+  },
+  {
+    p: "Según el artículo 12.1 del Decreto 42/2019, ¿cuál es el plazo para recuperar o compensar la diferencia entre la jornada que deba realizarse y la efectivamente prestada?",
+    ops: [
+      "Dentro del mes natural en que se haya producido, sin posibilidad de prórroga",
+      "Dentro del mes natural en que se haya producido o de los dos meses siguientes al mismo",
+      "Dentro de los tres meses naturales siguientes a aquel en que se generó la diferencia",
+      "Dentro del año natural en que se produjo la diferencia horaria"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 12.1 del Decreto 42/2019 establece que la diferencia en cómputo semanal entre la jornada que deba realizarse y la efectivamente prestada «podrá ser objeto de recuperación o compensación dentro del mes natural en que se haya producido, o de los dos meses siguientes al mismo». No confundir con el plazo del artículo 4.3 (excesos por requerimiento urgente), que es de tres meses."
+  },
+  {
+    p: "Según el artículo 13.1.a) del Decreto 42/2019, ¿en qué fecha queda exento de asistencia al trabajo el personal cuyo centro de trabajo radique en la ciudad de Valencia por fiestas locales?",
+    ops: [
+      "El día 9 de octubre",
+      "El día 18 de marzo",
+      "El martes de la semana de la Magdalena",
+      "El día 23 de junio"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 13.1 del Decreto 42/2019 asigna tres días de fiestas locales: a) el 18 de marzo, para el personal cuyo centro de trabajo radique en Valencia o municipios con fiestas de Fallas; b) el 23 de junio, para Alicante (San Juan); c) el martes de la semana de la Magdalena, para Castellón. Es fundamental no confundir qué día corresponde a cada ciudad."
+  },
+  {
+    p: "¿Cuál es el horario de trabajo durante la semana de fiestas locales en cada municipio de la Comunitat Valenciana, según el artículo 13.7 del Decreto 42/2019?",
+    ops: [
+      "De 09.00 a 13.30 horas",
+      "De 08.00 a 14.00 horas",
+      "De 09.00 a 14.00 horas",
+      "De 07.30 a 13.00 horas"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 13.7 del Decreto 42/2019 establece que «el horario de trabajo durante la semana de fiestas de cada municipio de la Comunidad Valenciana en que radique el puesto de trabajo será de 09.00 a 14.00 horas». Este horario reducido aplica durante toda esa semana, no solo el día festivo."
+  },
+  {
+    p: "Según el artículo 13.8 del Decreto 42/2019, ¿en qué períodos se produce la reducción de dos horas y media semanales respecto a la jornada ordinaria?",
+    ops: [
+      "Del 1 de junio al 30 de septiembre, ambos inclusive, y en Navidad",
+      "Del 15 de mayo al 15 de octubre, ambos inclusive, y en los períodos de vacaciones escolares de Navidad y Pascua",
+      "Del 1 de julio al 31 de agosto, ambos inclusive, sin reducción en Pascua",
+      "Del 1 de junio al 15 de septiembre y únicamente en las vacaciones de Navidad"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 13.8 del Decreto 42/2019 establece que «desde el 15 de mayo al 15 de octubre, ambos inclusive, y en los períodos de vacaciones escolares de Navidad y Pascua, la jornada de trabajo se reducirá en dos horas y media semanales respecto a la que corresponda realizar». Es importante memorizar las fechas exactas: 15 de mayo al 15 de octubre."
+  },
+  {
+    p: "El artículo 14.1 del Decreto 42/2019 permite flexibilizar en una hora diaria el horario de permanencia obligatoria. ¿Cuál de las siguientes circunstancias NO habilita esta flexibilidad de una hora?",
+    ops: [
+      "Tener a su cuidado directo personas que requieran especial dedicación",
+      "Tener a su cuidado directo hijos o hijas de 14 años o menores",
+      "Ser padre o madre de familia numerosa, hasta que el menor cumpla 15 años",
+      "Empleadas públicas en estado de gestación"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 14.1 del Decreto 42/2019 recoge la flexibilidad de una hora para: a) cuidado directo de personas con especial dedicación; b) cuidado de hijos/as o menores en acogimiento de 14 años o menores; c) familiar hasta segundo grado con enfermedad grave o discapacidad del 65% o más; d) empleadas en estado de gestación; e) personal con larga o crónica enfermedad. La flexibilidad de dos horas para familias numerosas se recoge en el artículo 14.2.b), no en el apartado de una hora."
+  },
+  {
+    p: "Según el artículo 15.1 del Decreto 42/2019, ¿a cuántas horas de descanso tiene derecho el personal por cada período semanal trabajado y cuál es el mínimo en caso de necesidades de servicio?",
+    ops: [
+      "36 horas continuas, con mínimo de 24 horas en caso de necesidades",
+      "48 horas continuas, con mínimo de 36 horas continuas en caso de necesidades de servicio",
+      "40 horas continuas, sin posibilidad de reducción por necesidades del servicio",
+      "48 horas continuas, reducibles a 24 horas previa autorización de la dirección general de función pública"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 15.1 del Decreto 42/2019 establece que «el personal tendrá derecho a 48 horas continuadas de descanso por cada período semanal trabajado». Si su aplicación impide la cobertura de servicios, el descanso se fijará previa negociación con las organizaciones sindicales, «que en ningún caso será inferior a 36 horas continuadas»."
+  },
+  {
+    p: "La pausa diaria de treinta minutos establecida en el artículo 16 del Decreto 42/2019, ¿cómo se computa a efectos de la jornada?",
+    ops: [
+      "No computa como tiempo de trabajo efectivo y debe recuperarse",
+      "Computa como tiempo de trabajo efectivo",
+      "Computa solo si se realiza entre las horas que indica la dirección de la unidad",
+      "Computa al 50 % como tiempo de trabajo efectivo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 16.1 del Decreto 42/2019 establece que «durante la jornada laboral se dispondrá de una pausa de treinta minutos de descanso, computable como de trabajo efectivo». Esta pausa no se descuenta de la jornada. Para el personal de servicios burocráticos se realizará preferentemente entre las 10.00 y las 12.00 horas, organizándose en turnos para mantener los servicios atendidos."
+  },
+  {
+    p: "Según el artículo 18.1 del Decreto 42/2019, ¿cuál es el horario general de atención al público en las oficinas de las sedes centrales de las consellerias y las oficinas PROP?",
+    ops: [
+      "De 09.00 a 14.00 horas, de lunes a viernes",
+      "De 09.00 a 14.30 horas, de lunes a viernes",
+      "De 08.30 a 14.30 horas, de lunes a viernes",
+      "De 09.00 a 15.00 horas, de lunes a viernes"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 18.1 del Decreto 42/2019 establece que las oficinas de las sedes centrales de las consellerias, las sedes principales de sus delegaciones y las oficinas PROP «prestarán el servicio de información administrativa general y registro de documentos en horario general de apertura al público de 09.00h a 14.30h, de lunes a viernes». Los jueves, al menos una oficina PROP por provincia amplía hasta las 19.00h."
+  },
+  {
+    p: "Cuando el personal enferma sin que se haya expedido parte médico de baja, ¿en qué plazo debe comunicar su ausencia y qué justificación debe aportar según el artículo 19.1.a) del Decreto 42/2019?",
+    ops: [
+      "Antes del inicio de la jornada en todo caso, sin necesidad de justificante si la ausencia es de un día",
+      "Con preferencia durante la hora después del inicio de la jornada; debe presentar justificante facultativo si la ausencia es de dos o tres días, o si siendo inferior hay reiteración",
+      "En el plazo de 24 horas desde el inicio de la ausencia, con justificante del médico de cabecera siempre",
+      "En el plazo de tres días hábiles, aportando parte de baja expedido por el médico de la Seguridad Social"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 19.1.a) del Decreto 42/2019 establece que para ausencias por enfermedad sin parte de baja, el personal comunicará su ausencia «con preferencia durante la hora después del inicio de la jornada, salvo causas justificadas que lo impidan». Tras la reincorporación, deberá presentar justificante facultativo si la ausencia es de dos o tres días o, si es inferior, cuando exista reiteración."
+  },
+
+  /* ══ CAPÍTULO III — PERMISOS ══ */
+  {
+    p: "¿Cuántos días naturales y consecutivos de permiso por matrimonio o inscripción en el Registro de Uniones de Hecho establece el artículo 21.1 del Decreto 42/2019, y hasta cuándo puede disfrutarse?",
+    ops: [
+      "10 días naturales, dentro del mes siguiente al hecho causante",
+      "15 días naturales y consecutivos, dentro de los 6 meses siguientes al matrimonio o inscripción",
+      "20 días naturales, sin límite temporal",
+      "15 días hábiles, dentro del mes siguiente al hecho causante"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 21.1 del Decreto 42/2019 establece «quince días naturales y consecutivos por razón de matrimonio o inscripción en el Registro de Uniones de Hecho». El artículo 21.2 precisa que el permiso puede acumularse a vacaciones y asuntos propios, y que no debe disfrutarse necesariamente a continuación del hecho causante, «pero siempre dentro de los 6 meses siguientes». Son días naturales, no hábiles."
+  },
+  {
+    p: "El artículo 21.4 del Decreto 42/2019 establece un permiso adicional por la celebración de matrimonio de un familiar. ¿En qué condiciones se amplía a dos días naturales?",
+    ops: [
+      "Cuando el familiar sea de primer grado y la celebración se realice en distinta provincia",
+      "Cuando el lugar de celebración supere los 375 kilómetros computados desde la localidad de residencia del personal",
+      "Cuando la celebración sea en el extranjero, independientemente de la distancia",
+      "Cuando el familiar sea de primer grado y la celebración coincida con un día laborable"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 21.4 del Decreto 42/2019 establece que el permiso por matrimonio de un familiar dentro del segundo grado de consanguinidad o afinidad «será de dos días naturales consecutivos» si «el lugar en el que se realiza la celebración superara la distancia de 375 kilómetros, computados desde la localidad de residencia de dicho personal». El umbral de 375 km es el dato técnico clave."
+  },
+  {
+    p: "Según el artículo 32 del Decreto 42/2019, ¿a partir de qué semana de embarazo se tiene derecho al permiso retribuido por estado de gestación y cuándo puede iniciarse en caso de gestación múltiple?",
+    ops: [
+      "A partir de la semana 36 para embarazos simples y semana 34 para gestación múltiple",
+      "A partir del primer día de la semana 37 para embarazos simples, y del primer día de la semana 35 para gestación múltiple",
+      "A partir de la semana 38 en todos los casos, sin distinción por tipo de gestación",
+      "A partir de la semana 36 para todos los supuestos, ampliable a la semana 34 con informe médico"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 32 del Decreto 42/2019 establece que «las empleadas públicas en estado de gestación disfrutarán de un permiso retribuido, a partir del día primero de la semana 37 de embarazo, hasta la fecha del parto». En supuesto de gestación múltiple, «este permiso podrá iniciarse el primer día de la semana 35 de embarazo». Las semanas 37 y 35 son los datos que deben memorizarse."
+  },
+  {
+    p: "El artículo 33.1 del Decreto 42/2019 regula el permiso por deberes de conciliación. ¿Para qué tipo de consultas o actuaciones puede ausentarse el personal durante la jornada laboral?",
+    ops: [
+      "Exclusivamente para consultas médicas propias, sin incluir a familiares",
+      "Para consultas, tratamientos y exploraciones médicas propias o de menores/mayores/personas con diversidad funcional a su cargo; reuniones de coordinación en centros de educación especial; consultas de apoyo sociosanitario; y consultas médicas del cónyuge o pareja cuando sea necesario acompañante",
+      "Solo para acudir al médico de cabecera o especialista, con exclusión de fisioterapeutas y psicólogos",
+      "Para cualquier consulta médica o administrativa, sin límite de tipo ni de tiempo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 33.1 del Decreto 42/2019 permite ausentarse durante la jornada para: a) consultas, tratamientos y exploraciones médicas propias o de menores, personas mayores o con diversidad funcional a su cargo; b) reuniones de coordinación y tutorías de centros de educación especial; c) consultas de apoyo adicional en el ámbito sociosanitario. Además, podrá acudir a consultas médicas del cónyuge o pareja de hecho cuando se acredite la necesidad de asistir con acompañante. La ausencia debe limitarse al tiempo indispensable."
+  },
+  {
+    p: "En caso de interrupción del embarazo, ¿a cuántos días naturales de permiso tiene derecho la empleada pública según el artículo 33.4 del Decreto 42/2019?",
+    ops: [
+      "Tres días hábiles",
+      "Cinco días naturales",
+      "Seis días naturales y consecutivos a partir del hecho causante, siempre que no esté en incapacidad temporal",
+      "Quince días naturales acumulables al permiso de maternidad"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 33.4 del Decreto 42/2019 establece que «en caso de interrupción del embarazo, la empleada pública tendrá derecho a seis días naturales y consecutivos a partir del hecho causante, siempre y cuando no se encuentre en situación de incapacidad temporal». Es un permiso específico y autónomo para esta situación."
+  },
+  {
+    p: "Según el artículo 34.1 del Decreto 42/2019, ¿cuántos días hábiles de permiso por fallecimiento del cónyuge o familiar de primer grado corresponden cuando el suceso se produce en distinta localidad?",
+    ops: [
+      "Tres días hábiles",
+      "Cuatro días hábiles",
+      "Cinco días hábiles",
+      "Siete días hábiles"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 34.1 del Decreto 42/2019 establece que por fallecimiento del cónyuge, pareja de hecho o familiar de primer grado, el permiso es de «tres días hábiles cuando el suceso se produzca en la misma localidad, y cinco días hábiles cuando sea en distinta localidad». Para el segundo grado (art. 34.2) son dos días en la misma localidad y cuatro en distinta. La referencia para «misma o distinta localidad» es el término municipal de la residencia habitual del solicitante."
+  },
+  {
+    p: "¿En qué se diferencia el permiso por accidente o enfermedad grave (art. 35) del permiso por fallecimiento (art. 34) del Decreto 42/2019 en cuanto a su renovación?",
+    ops: [
+      "No hay diferencia; ambos se conceden una sola vez por sujeto causante",
+      "El permiso por enfermedad grave puede concederse cada vez que se acredite nuevamente una situación de gravedad, mientras que el de fallecimiento es único",
+      "El permiso por fallecimiento puede renovarse si hay complicaciones en el sepelio; el de enfermedad no",
+      "Solo el permiso por fallecimiento puede ser acumulado al período vacacional"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 35.3 del Decreto 42/2019 establece que «se tendrá derecho a este permiso cada vez que se acredite nuevamente una situación de gravedad de conformidad con lo dispuesto en el artículo 3.i de este decreto». Esto diferencia el permiso por enfermedad grave del de fallecimiento, que lógicamente se produce una sola vez. Cuando la enfermedad se agrava o recae con nueva acreditación médica, se genera de nuevo el derecho al permiso."
+  },
+  {
+    p: "El artículo 36 del Decreto 42/2019 regula el permiso por exámenes. ¿Los exámenes parciales eliminatorios tienen la consideración de exámenes finales a efectos de este permiso?",
+    ops: [
+      "No, solo los exámenes finales y las pruebas definitivas de aptitud dan derecho al permiso",
+      "Sí, los exámenes parciales eliminatorios se entienden incluidos en el permiso, con independencia de que su realización sea compatible con la jornada laboral",
+      "Solo si el personal acredita que la convocatoria es para acceso a la Administración Pública",
+      "Solo si tienen lugar fuera de la jornada laboral y no pueden realizarse en otro momento"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 36 del Decreto 42/2019 establece que el personal dispondrá de permiso para concurrir a pruebas selectivas, exámenes finales y demás pruebas definitivas de aptitud «aunque la realización del ejercicio sea compatible con la jornada laboral. Se entienden incluidos en este permiso los exámenes parciales siempre que tengan carácter eliminatorio». El elemento clave es que el parcial sea eliminatorio."
+  },
+  {
+    p: "Según el artículo 37 del Decreto 42/2019, ¿cuántos días de permiso corresponden por traslado de domicilio con cambio de localidad de residencia?",
+    ops: [
+      "Un día, independientemente de si hay cambio de localidad o no",
+      "Dos días si no hay cambio de localidad; tres días si hay cambio de localidad",
+      "Un día sin cambio de localidad; dos días con cambio de localidad",
+      "Tres días en todo caso, sean o no días hábiles"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 37 del Decreto 42/2019 distingue dos supuestos: «un día por traslado de su domicilio sin cambio de localidad de residencia» (art. 37.1) y «cuando exista cambio de localidad de residencia, este permiso será de dos días» (art. 37.2). Es un permiso sencillo pero que puede aparecer en el examen con opciones tramposas invirtiendo los plazos."
+  },
+  {
+    p: "Según el artículo 40.1 del Decreto 42/2019, ¿cuántos días de asuntos propios puede disfrutar el personal cada año natural y hasta cuándo puede disfrutarlos?",
+    ops: [
+      "4 días por año natural, hasta el 31 de diciembre del mismo año",
+      "6 días por año natural y hasta el día 15 de febrero del año siguiente",
+      "6 días por año natural, que deben disfrutarse obligatoriamente dentro del año natural",
+      "8 días por año natural, hasta el 31 de enero del año siguiente"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 40.1 del Decreto 42/2019 establece que «cada año natural, y hasta el día 15 de febrero del año siguiente, se podrá disfrutar de hasta 6 días por asuntos propios o particulares, así como de los días adicionales previstos en el apartado 8 de este artículo y en el artículo 41». Son 6 días base más posibles adicionales. El plazo límite es el 15 de febrero del año siguiente."
+  },
+  {
+    p: "¿Cuándo se tienen días adicionales de asuntos propios por antigüedad, según el artículo 40.8 del Decreto 42/2019?",
+    ops: [
+      "Dos días adicionales al cumplir el quinto trienio e incremento de un día por cada trienio a partir del séptimo",
+      "Dos días adicionales al cumplir el sexto trienio, incrementándose en un día adicional por cada trienio cumplido a partir del octavo",
+      "Tres días adicionales al cumplir el décimo trienio, sin posibilidad de incremento posterior",
+      "Un día adicional por cada quinquenio de servicios prestados"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 40.8 del Decreto 42/2019 establece que «el personal tendrá derecho al disfrute de dos días adicionales al cumplir el sexto trienio, incrementándose en un día adicional por cada trienio cumplido a partir del octavo». Esto significa: al sexto trienio, 2 días adicionales; al octavo, 3 días; al noveno, 4 días, y así sucesivamente. Es una pregunta habitual en oposiciones."
+  },
+  {
+    p: "El personal funcionario interino, ¿a cuántos días de asuntos propios tiene derecho según el artículo 40.5 del Decreto 42/2019?",
+    ops: [
+      "A los mismos 6 días que el personal de carrera, con independencia de la duración del nombramiento",
+      "A un día por cada dos meses completos trabajados en la Administración de la Generalitat",
+      "No tiene derecho a días de asuntos propios al no ser personal de carrera",
+      "A un día por cada mes completo trabajado, con un máximo de 6 días anuales"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 40.5 del Decreto 42/2019 establece que «el personal funcionario interino podrá disfrutar de dicho permiso a razón de un día por cada dos meses completos trabajados en la administración de la Generalitat». Así, un interino que trabaje 12 meses completos tendrá 6 días; si trabaja 4 meses, 2 días. Los períodos en distintos contratos dentro del mismo año que no hayan generado el disfrute pueden acumularse."
+  },
+  {
+    p: "El artículo 41.1 del Decreto 42/2019 establece días compensatorios por los días 24 y 31 de diciembre. ¿En qué supuesto se conceden estos días de permiso?",
+    ops: [
+      "Siempre, con independencia de qué día de la semana caigan el 24 y el 31 de diciembre",
+      "Solo cuando el 24 de diciembre cae en domingo",
+      "Cuando los días 24 y 31 de diciembre, exentos de asistencia al trabajo, coincidan en festivo, sábado o día no laborable",
+      "Solo en años bisiestos o cuando la dirección general lo autorice expresamente"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 41.1 del Decreto 42/2019 establece que «cuando los días 24 y 31 de diciembre, exentos de asistencia al trabajo, coincidan en festivo, sábado o día no laborable, se concederán dos días de permiso». Además, el artículo 41.2 prevé hasta dos días de permiso cuando alguna festividad de ámbito autonómico o nacional no recuperable coincida con sábado. Son los llamados «días compensatorios»."
+  },
+
+  /* ══ CAPÍTULO IV — LICENCIAS ══ */
+  {
+    p: "Según el artículo 43.1 del Decreto 42/2019, ¿cuántas horas anuales de licencia retribuida puede concederse para la asistencia a cursos externos relacionados con el puesto de trabajo?",
+    ops: [
+      "Veinticuatro horas al año como máximo",
+      "Treinta horas al año como máximo",
+      "Cuarenta horas al año como máximo",
+      "Cincuenta horas al año como máximo"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 43.1 del Decreto 42/2019 establece que la licencia retribuida para cursos externos cuyo contenido esté directamente relacionado con las funciones del puesto o la carrera profesional administrativa tendrá «un límite máximo de cuarenta horas al año». Esta licencia es concedida por el órgano competente en materia de personal de la conselleria cuando no lo impidan las necesidades del servicio."
+  },
+  {
+    p: "¿Qué retribuciones percibe el personal durante la licencia por estudios regulada en el artículo 44 del Decreto 42/2019?",
+    ops: [
+      "Las retribuciones íntegras, tanto básicas como complementarias",
+      "El 75 % de las retribuciones totales",
+      "Exclusivamente las retribuciones básicas",
+      "Ninguna retribución, al tratarse de una licencia sin retribución"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 44.3 del Decreto 42/2019 establece que «durante el disfrute de esta licencia se tendrá derecho exclusivamente a la percepción de las retribuciones básicas». No se perciben los complementos. Si al finalizar la licencia no se presenta la certificación acreditativa de los estudios realizados, el personal estará obligado a reintegrar las retribuciones percibidas."
+  },
+  {
+    p: "¿Con qué frecuencia puede concederse la licencia por estudios según el artículo 44.5 del Decreto 42/2019 y cuál es el requisito de servicios?",
+    ops: [
+      "Cada tres años, siempre que se hayan prestado servicios ininterrumpidos",
+      "Cada cinco años, siempre que los cinco años se hayan prestado en servicio activo ininterrumpidamente",
+      "Cada dos años, sin requisito de servicios mínimos",
+      "Una sola vez a lo largo de la carrera administrativa"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 44.5 del Decreto 42/2019 establece que «la licencia se podrá conceder cada cinco años, siempre que estos se hayan prestado en servicio activo ininterrumpidamente». El doble requisito —periodicidad quinquenal y servicios ininterrumpidos en activo— es el elemento diferencial respecto a otras licencias."
+  },
+  {
+    p: "La licencia por interés particular del artículo 47 del Decreto 42/2019 tiene una duración máxima de seis meses. ¿Cada cuántos años puede concederse y con cuánta antelación mínima debe solicitarse?",
+    ops: [
+      "Cada dos años; con un mes de antelación mínima",
+      "Cada tres años; con un mes de antelación mínima, salvo casos excepcionales debidamente justificados",
+      "Cada cinco años; con tres meses de antelación mínima",
+      "Cada año; sin plazo mínimo de antelación"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 47.1 del Decreto 42/2019 establece que la licencia por interés particular tiene «una duración máxima de seis meses cada tres años». El artículo 47.2 dispone que debe solicitarse «con una antelación mínima de un mes respecto de su fecha de inicio, salvo casos excepcionales que deberán quedar debidamente justificados». Es concedida por la dirección general competente en materia de función pública."
+  },
+  {
+    p: "Según el artículo 47.3 del Decreto 42/2019, ¿tiene la licencia por interés particular la consideración de servicios efectivamente prestados a efectos de vacaciones?",
+    ops: [
+      "Sí, computa como servicio efectivo a todos los efectos, incluido el cómputo de vacaciones",
+      "Sí, con carácter general, pero cuando la licencia coincida con un mes natural o lo supere, deberá descontarse de las vacaciones la parte proporcional de licencia disfrutada",
+      "No, en ningún caso computa como servicio efectivo",
+      "Sí, pero solo si la licencia es inferior a dos meses de duración"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 47.3 del Decreto 42/2019 dispone que esta licencia «tendrá la consideración de servicios efectivamente prestados». Sin embargo, hay una excepción: «se excluye el caso del cómputo de las vacaciones anuales. En este supuesto, y cuando la licencia o la suma de las mismas coincida con un mes natural o lo supere, deberá descontarse de las vacaciones anuales el tiempo proporcional de la licencia sin retribución disfrutada». Idéntica regla rige para la licencia por enfermedad de familiares (art. 48.3)."
+  },
+  {
+    p: "La licencia del artículo 48 del Decreto 42/2019 por enfermedad grave o irreversible de familiar que conviva, ¿cuál es su duración máxima y qué ocurre si se solicita una nueva licencia por distinto sujeto causante?",
+    ops: [
+      "Máximo de seis meses por sujeto causante; la nueva licencia se acumula a la anterior",
+      "Máximo de un año por cada sujeto causante; el inicio de una nueva licencia por distinto sujeto causante pone fin a la anterior",
+      "Máximo de tres meses prorrogables hasta seis; la nueva licencia solo puede pedirse al finalizar la anterior",
+      "No tiene duración máxima establecida; puede prorrogarse mientras subsista la enfermedad grave"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 48.1 del Decreto 42/2019 establece que esta licencia tiene «una duración máxima de un año por cada sujeto causante». Respecto a los efectos de una nueva solicitud por distinto sujeto, la norma es clara: «el inicio de cada nueva licencia por distinto sujeto causante pondrá fin a la licencia que viniera disfrutándose hasta ese momento». No se pueden acumular licencias por distintos sujetos causantes."
+  },
+  {
+    p: "La licencia para perfeccionamiento profesional (art. 49 del Decreto 42/2019) es una licencia sin retribución. ¿Cuál es su duración máxima y quién la concede?",
+    ops: [
+      "Máximo de seis meses al año; concedida por el órgano de personal de la conselleria",
+      "Máximo de tres meses al año; concedida por la dirección general competente en materia de función pública a solicitud de la persona interesada",
+      "Máximo de un mes al año; concedida por el titular de la conselleria",
+      "Máximo de dos meses cada dos años; concedida por la dirección general de función pública previo informe vinculante de la conselleria"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 49.1 del Decreto 42/2019 establece que esta licencia no retribuida tiene «una duración máxima de tres meses al año» y es concedida por «la dirección general competente en materia de función pública, a solicitud de la persona interesada». Se requiere informe favorable del órgano competente en materia de personal de la conselleria o entidad y que la gestión del servicio lo permita. No se aplica a cursos ya cubiertos por los artículos 43 y 44."
+  },
+
+  /* ══ CAPÍTULO V — VACACIONES ══ */
+  {
+    p: "¿Cuántos días hábiles de vacaciones le corresponden al personal que lleva más de 25 años de servicio, según el artículo 50.2 del Decreto 42/2019?",
+    ops: [
+      "23 días hábiles",
+      "24 días hábiles",
+      "25 días hábiles",
+      "26 días hábiles"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El artículo 50.2 del Decreto 42/2019 establece la escala de vacaciones por antigüedad: a partir de 15 años = 23 días hábiles; a partir de 20 años = 24 días hábiles; a partir de 25 años = 25 días hábiles; a partir de 30 años = 26 días hábiles. En el caso de 25 años o más, corresponden 25 días hábiles. Prestar atención a los umbrales exactos: son «a partir de» cada número de años."
+  },
+  {
+    p: "Según el artículo 51.1.b) del Decreto 42/2019, ¿en qué período mínimo deben disfrutarse las vacaciones con carácter general?",
+    ops: [
+      "En períodos mínimos de cinco días naturales consecutivos",
+      "En períodos mínimos de siete días naturales consecutivos",
+      "En períodos mínimos de siete días hábiles consecutivos",
+      "En períodos mínimos de cinco días hábiles consecutivos"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 51.1.b) del Decreto 42/2019 establece que «las vacaciones se disfrutarán en períodos mínimos de siete días naturales consecutivos». Sin embargo, el artículo 51.1.c) permite que 7 días del total de vacaciones puedan disfrutarse de forma independiente, sin la limitación de los 7 días mínimos ni la obligación del período estival."
+  },
+  {
+    p: "¿Hasta qué fecha puede disfrutarse el período vacacional anual, con carácter general, según el artículo 51.1 del Decreto 42/2019?",
+    ops: [
+      "Hasta el 31 de diciembre del año natural al que correspondan",
+      "Hasta el 31 de enero del año siguiente",
+      "Hasta el 15 de febrero del año siguiente",
+      "Hasta el 31 de marzo del año siguiente, en casos excepcionales"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 51.1 del Decreto 42/2019 establece que las vacaciones «podrán disfrutarse a lo largo de todo el año natural y hasta el 31 de enero del año siguiente». No confundir con el plazo de asuntos propios (hasta el 15 de febrero del año siguiente). Además, el artículo 51.3 prevé una excepción: si situaciones de IT, permisos de nacimiento o riesgo durante el embarazo impiden su disfrute, podrán disfrutarse aunque haya terminado el año natural."
+  },
+  {
+    p: "Según el artículo 51.1.a) del Decreto 42/2019, ¿en qué meses debe disfrutarse preferentemente al menos la mitad de los días de vacaciones?",
+    ops: [
+      "Durante los meses de julio y agosto exclusivamente",
+      "Durante los meses de junio a septiembre",
+      "Durante los meses de julio a septiembre",
+      "Durante el período que establezca el órgano competente en materia de personal"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 51.1.a) del Decreto 42/2019 establece que «al menos la mitad de los días de vacaciones anuales deberán ser disfrutados, preferentemente, durante los meses de junio a septiembre». Son cuatro meses: junio, julio, agosto y septiembre. El decreto usa el término «preferentemente», lo que indica que no es obligatorio pero sí el criterio general orientativo."
+  },
+  {
+    p: "¿Pueden las vacaciones ser sustituidas por compensación económica según el artículo 51.4 del Decreto 42/2019? ¿Existe alguna excepción?",
+    ops: [
+      "Sí, siempre que el personal lo solicite con la debida antelación y la Administración lo autorice",
+      "No pueden sustituirse por compensación económica; excepto para el personal interino cuando cese antes de completar el año y no pueda disfrutarlas por necesidades del servicio",
+      "Sí, pero solo para el personal con más de 20 años de servicio que se jubile anticipadamente",
+      "No pueden sustituirse en ningún caso, ni para el personal interino ni para el de carrera"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 51.4 del Decreto 42/2019 establece que «las vacaciones no podrán, en ningún caso, ser sustituidas por compensaciones económicas». Sin embargo, hay una excepción: «cuando se produzca el cese del personal interino antes de completar el año de servicio y no pudiera disfrutar de las vacaciones por necesidades del servicio, tendrá derecho al abono de la parte proporcional de sus vacaciones». Esta excepción solo opera para interinos cesados por causas ajenas a su voluntad y por necesidades del servicio."
+  },
+  {
+    p: "Según el artículo 52.1 del Decreto 42/2019, ¿con qué antelación debe elevarse la comunicación formal de opción de vacaciones en el período estival y qué ocurre para el resto del año?",
+    ops: [
+      "Antes del 1 de abril para el período estival; dos meses de antelación para el resto del año",
+      "Antes del 1 de mayo para el período estival; un mes de antelación para el resto del año",
+      "Antes del 1 de junio para el período estival; quince días de antelación para el resto del año",
+      "Antes del 1 de marzo para el período estival; sin plazo específico para el resto del año"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 52.1 del Decreto 42/2019 establece que quien desee vacaciones en el período estival deberá elevar su comunicación «antes del 1 de mayo, al responsable de su unidad administrativa». Para el «resto del personal deberá solicitarlas con un mes de antelación a la fecha prevista para su inicio». La resolución del órgano competente deberá producirse «con quince días de antelación a la fecha de inicio prevista»."
+  },
+  {
+    p: "Según el artículo 54.1 del Decreto 42/2019, ¿qué personal tiene preferencia para elegir el período de vacaciones durante los períodos escolares no lectivos?",
+    ops: [
+      "El personal con mayor antigüedad en el puesto de trabajo",
+      "Las personas con hijos o hijas menores de 14 años y el personal con personas mayores de 65 años o con diversidades funcionales en situación de dependencia a su cargo",
+      "El personal con más de 15 años de servicio en la Administración de la Generalitat",
+      "Exclusivamente el personal con hijos o hijas en edad escolar, sin límite de edad"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 54.1 del Decreto 42/2019 establece preferencia para elegir vacaciones en períodos escolares no lectivos a dos colectivos: a) personas con hijos o hijas menores de 14 años; b) personal que tenga a su cargo personas mayores de 65 años o con diversidades funcionales en situación de dependencia. Cuando coincidan varias personas con este derecho en la misma unidad, elegirá la de más antigüedad en la Administración, estableciéndose un ciclo rotativo."
+  },
+
+  /* ══ PREGUNTAS DE SÍNTESIS Y APLICACIÓN ══ */
+  {
+    p: "Un funcionario del grupo C2 que ocupa un puesto con componente de desempeño E015, ¿qué jornada semanal tiene asignada según el Decreto 42/2019?",
+    ops: [
+      "35 horas semanales, al ser C2 y no tener funciones directivas",
+      "37 horas y 30 minutos semanales, porque el componente E015 determina la jornada de especial dedicación para el grupo C2",
+      "40 horas semanales, al tratarse de un puesto con componente de desempeño elevado",
+      "36 horas semanales, como media entre las dos jornadas posibles"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 4.2 del Decreto 42/2019 establece que los puestos de especial dedicación son aquellos con componente de desempeño igual o superior al umbral de cada grupo. Para el grupo C2, el umbral es E015. Un puesto con exactamente E015 ya está en o por encima del umbral, por lo que corresponde la jornada de 37 horas y 30 minutos semanales. Si el componente fuera E014 o inferior, sería jornada de 35 horas."
+  },
+  {
+    p: "Una funcionaria que lleva 18 años de servicio en la GVA solicita los días adicionales de asuntos propios por antigüedad del artículo 40.8 del Decreto 42/2019. ¿Cuántos días adicionales le corresponden si ha completado exactamente 6 trienios (18 años)?",
+    ops: [
+      "Ningún día adicional, pues no ha cumplido todavía el séptimo trienio",
+      "Dos días adicionales, porque ha cumplido exactamente el sexto trienio",
+      "Un día adicional, pues el sexto trienio solo genera un día",
+      "Tres días adicionales, porque se cuentan desde el quinto trienio"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 40.8 del Decreto 42/2019 establece que «el personal tendrá derecho al disfrute de dos días adicionales al cumplir el sexto trienio». 6 trienios equivalen a 18 años de servicio. Al cumplir exactamente el sexto trienio (18 años), corresponden 2 días adicionales. El incremento de un día más se produce «por cada trienio cumplido a partir del octavo», es decir, al cumplir el octavo trienio (24 años) corresponderían 3 días adicionales."
+  },
+  {
+    p: "Un funcionario tiene derecho simultáneamente a la reducción de jornada del artículo 7.1.c) (por su propia enfermedad crónica) y a la reducción del artículo 7.6 (por ser víctima de violencia terrorista). ¿Puede disfrutar de ambas simultáneamente?",
+    ops: [
+      "No, son incompatibles; debe elegir una de las dos reducciones",
+      "Sí, porque el artículo 8.1 excepciona expresamente las reducciones del 7.1.c) y del 7.7, siendo compatibles con las restantes, y la del 7.7 es la de víctimas de terrorismo",
+      "Solo si la suma de ambas reducciones no supera la mitad de la jornada",
+      "Solo con autorización expresa de la dirección general de función pública"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 8.1 del Decreto 42/2019 establece que las reducciones son incompatibles entre sí «a excepción de las de los apartados 7.1.c), 7.6 y 7.7, que serán compatibles con las restantes». El artículo 7.7 regula la reducción para víctimas de violencia terrorista. Por tanto, la reducción del 7.1.c) (enfermedad crónica) es compatible con la del 7.7 (víctimas de terrorismo), y podrían disfrutarse simultáneamente, aunque el artículo 8.2 establece que solo una de ellas será sin deducción de retribuciones."
+  },
+  {
+    p: "¿Puede el personal acogido a una reducción de jornada ser requerido para realizar una jornada especial superior según el artículo 4.4 del Decreto 42/2019?",
+    ops: [
+      "Sí, en casos de necesidades urgentes del servicio, debidamente justificadas",
+      "No, el personal que tenga concedida una reducción de jornada no podrá ser requerido para realizar una jornada laboral superior a la que tenga reconocida",
+      "Sí, pero solo si no hay otro personal disponible en la unidad administrativa",
+      "Depende del tipo de reducción: solo se excluye si la reducción es por enfermedad o violencia de género"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El artículo 4.4 del Decreto 42/2019 establece de forma rotunda que «el personal que tenga concedida una reducción de jornada no podrá ser requerido para realizar una jornada laboral superior a la que tenga reconocida». Esta protección es absoluta y no admite excepciones por necesidades del servicio, a diferencia de lo que ocurre con el personal sin reducción de jornada."
+  },
+  {
+    p: "¿Qué diferencia existe entre la licencia por cursos externos (art. 43) y la licencia por estudios (art. 44) del Decreto 42/2019 en cuanto a retribución y duración?",
+    ops: [
+      "Ambas son retribuidas y tienen el mismo límite de cuarenta horas anuales",
+      "La licencia por cursos externos es retribuida con límite de 40 horas anuales; la licencia por estudios es de hasta 12 meses pero solo se perciben retribuciones básicas",
+      "La licencia por cursos externos no es retribuida; la licencia por estudios sí es íntegramente retribuida",
+      "Ambas se limitan a 40 horas anuales, pero la de estudios permite solicitar excedencia"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> Son dos figuras distintas: la licencia por cursos externos (art. 43) es retribuida íntegramente, con un límite máximo de 40 horas al año, para cursos directamente relacionados con el puesto. La licencia por estudios (art. 44) tiene una duración de hasta 12 meses, pero durante su disfrute «se tendrá derecho exclusivamente a la percepción de las retribuciones básicas» (art. 44.3). Además, la licencia por estudios se concede cada 5 años con servicio activo ininterrumpido, y su incumplimiento genera obligación de reintegro."
+  }
+];
+
+/* ── LÓGICA ── */
+let orden = [], respondidas = 0, aciertos = 0, errores = 0;
+const TOTAL = BANCO.length;
+
+document.getElementById('totalLabel').textContent = '📋 ' + TOTAL + ' preguntas';
+document.getElementById('barraNum').textContent = '0 / ' + TOTAL;
+
+function mezclar(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function actualizarBarra() {
+  document.getElementById('barraFill').style.width = ((respondidas / TOTAL) * 100) + '%';
+  document.getElementById('barraNum').textContent = respondidas + ' / ' + TOTAL;
+  document.getElementById('scoreOk').textContent = '✓ ' + aciertos;
+  document.getElementById('scoreKo').textContent = '✗ ' + errores;
+}
+
+function construirPreguntas() {
+  orden = mezclar([...Array(TOTAL).keys()]);
+  const main = document.getElementById('mainContent');
+  main.innerHTML = '';
+  const letras = ['A', 'B', 'C', 'D'];
+
+  orden.forEach((idx, pos) => {
+    const q = BANCO[idx];
+    const opsOrden = mezclar([0, 1, 2, 3]);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'card-' + pos;
+
+    const numDiv = document.createElement('div');
+    numDiv.className = 'card-num';
+    numDiv.textContent = 'Pregunta ' + (pos + 1);
+
+    const pregDiv = document.createElement('div');
+    pregDiv.className = 'card-pregunta';
+    pregDiv.textContent = q.p;
+
+    const opcionesDiv = document.createElement('div');
+    opcionesDiv.className = 'opciones';
+
+    opsOrden.forEach((opIdx, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opcion';
+      btn.dataset.correcto = (opIdx === q.c) ? '1' : '0';
+      btn.dataset.pos = pos;
+      btn.innerHTML = '<span class="letra">' + letras[i] + '</span><span>' + q.ops[opIdx] + '</span>';
+      btn.addEventListener('click', onOpcionClick);
+      opcionesDiv.appendChild(btn);
+    });
+
+    const expDiv = document.createElement('div');
+    expDiv.className = 'explicacion';
+    expDiv.id = 'exp-' + pos;
+    expDiv.innerHTML = q.exp;
+
+    card.appendChild(numDiv);
+    card.appendChild(pregDiv);
+    card.appendChild(opcionesDiv);
+    card.appendChild(expDiv);
+    main.appendChild(card);
+  });
+
+  const res = document.createElement('div');
+  res.className = 'resultado';
+  res.id = 'resultado';
+  res.innerHTML = `
+    <div class="resultado-eyebrow">Resultado final</div>
+    <h2>Test completado</h2>
+    <div class="resultado-nota"><span id="rNota">-</span><span style="font-size:1.5rem;color:var(--texto-suave)">/10</span></div>
+    <div id="rBadge" class="calif-badge"></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num" id="rOk" style="color:var(--verde)">-</div><div class="stat-lab">Correctas</div></div>
+      <div class="stat"><div class="stat-num" id="rKo" style="color:var(--rojo)">-</div><div class="stat-lab">Erróneas</div></div>
+      <div class="stat"><div class="stat-num" id="rPct">-</div><div class="stat-lab">% Acierto</div></div>
+    </div>
+    <p class="resultado-hint">Revisa las explicaciones en cada pregunta para reforzar los conceptos.</p>
+    <button class="btn btn-naranja" onclick="reiniciar()">🔄 Nuevo intento</button>
+  `;
+  main.appendChild(res);
+}
+
+function onOpcionClick(e) {
+  const btn = e.currentTarget;
+  const pos = parseInt(btn.dataset.pos);
+  const card = document.getElementById('card-' + pos);
+  card.querySelectorAll('.opcion').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.correcto === '1') b.classList.add('correcta');
+    else if (b === btn) b.classList.add('incorrecta');
+  });
+  document.getElementById('exp-' + pos).classList.add('visible');
+  if (btn.dataset.correcto === '1') aciertos++; else errores++;
+  respondidas++;
+  actualizarBarra();
+  if (respondidas === TOTAL) mostrarResultado();
+}
+
+function mostrarResultado() {
+  const nota = ((aciertos / TOTAL) * 10).toFixed(1);
+  const pct = Math.round((aciertos / TOTAL) * 100);
+  let badge = '', color = '';
+  if (pct >= 90)      { badge = '🏆 Sobresaliente'; color = '#166534'; }
+  else if (pct >= 70) { badge = '✅ Notable';        color = '#1d4ed8'; }
+  else if (pct >= 50) { badge = '⚠️ Aprobado';      color = '#92400e'; }
+  else                { badge = '❌ Suspenso';       color = '#991b1b'; }
+  document.getElementById('rNota').textContent = nota;
+  document.getElementById('rOk').textContent = aciertos;
+  document.getElementById('rKo').textContent = errores;
+  document.getElementById('rPct').textContent = pct + '%';
+  const badgeEl = document.getElementById('rBadge');
+  badgeEl.textContent = badge;
+  badgeEl.style.cssText += `;background:${color}22;color:${color};border:1px solid ${color}44`;
+  const res = document.getElementById('resultado');
+  res.classList.add('visible');
+  setTimeout(() => res.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function reiniciar() {
+  respondidas = 0; aciertos = 0; errores = 0;
+  actualizarBarra();
+  construirPreguntas();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+construirPreguntas();
+</script>
+</body>
+</html>
